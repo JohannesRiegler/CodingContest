@@ -15,7 +15,7 @@ public class Level2 extends Level {
         }
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws Exception {
         ArrayList<File> files = getAllMatchingFiles("level2");
         for (File file : files) {
             Scanner scanner = getScanner(file);
@@ -31,7 +31,7 @@ public class Level2 extends Level {
 
     }
 
-    private static void calculateValues(Scanner scanner, FileWriter fw) throws IOException {
+    private static void calculateValues(Scanner scanner, FileWriter fw) throws Exception {
         int loc = scanner.nextInt();
         scanner.nextLine();
         ArrayList<String> inputs = new ArrayList<>();
@@ -50,6 +50,7 @@ public class Level2 extends Level {
                     break;
                 case "if":
                     if (inputs.get(++i) == "false") {
+                        lastIf = false;
                         for (int j = ++i; j < inputs.size(); j++) {
                             if (inputs.get(j) == "end") {
                                 i = j;
@@ -74,11 +75,11 @@ public class Level2 extends Level {
                         }
                         break;
                     }
+                    break;
                 case "return":
                     return;
                 default:
-                    new Exception("Fuck");
-                    break;
+                    System.out.println(input);
             }
         }
 
