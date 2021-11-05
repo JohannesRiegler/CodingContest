@@ -15,6 +15,10 @@ public class Variable {
         this.name = name;
     }
 
+    public String getValue() {
+        return value;
+    }
+
     public String getType(){
         if(Objects.equals(value, "true") || Objects.equals(value, "false"))
             return "boolean";

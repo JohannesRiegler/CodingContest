@@ -44,7 +44,7 @@ public class Level3 extends Level {
         }
 
         ArrayList<Boolean> ifValues = new ArrayList<>();
-        int curFunction = 0;
+        int curFunction = -1;
         for (int i = 0; i < inputs.size(); i++) {
             String input = inputs.get(i);
             try {
@@ -74,11 +74,29 @@ public class Level3 extends Level {
                             variables.get(variables.indexOf(new Variable(name))).setValue(value);
                         }
                     }
-                    case "print":
-                        functionOutputs.get(curFunction).concat(inputs.get(++i));
+                    case "print": {
+                        String nextValue = inputs.get(++i);
+                        if (variables.contains(new Variable(nextValue))) {
+                            Variable var = variables.get(variables.indexOf(new Variable(nextValue)));
+                            nextValue = var.getValue();
+                        }
+
+                        functionOutputs.set(curFunction, functionOutputs.get(curFunction).concat(nextValue));
                         break;
-                    case "if":
-                        if (Objects.equals(inputs.get(++i), "false")) {
+                    }
+
+                    case "if": {
+                        String nextValue = inputs.get(++i);
+                        String ifValue = nextValue;
+                        if (variables.contains(new Variable(nextValue))) {
+                            Variable var = variables.get(variables.indexOf(new Variable(nextValue)));
+                            if (!Objects.equals(var.getType(), "bool"))
+                                throw new Exception();
+                            else
+                                ifValue = var.getValue();
+                        }
+
+                        if (ifValue.equals("false")) {
                             ifValues.add(false);
                             for (int j = ++i; j < inputs.size(); j++) {
                                 if (Objects.equals(inputs.get(j), "end")) {
@@ -90,8 +108,10 @@ public class Level3 extends Level {
                             ifValues.add(true);
                         }
                         break;
+                    }
+
                     case "else":
-                        if (!ifValues.get(ifValues.size()-1)) {
+                        if (ifValues.get(ifValues.size() - 1)) {
                             for (int j = i + 1; j < inputs.size(); j++) {
                                 if (Objects.equals(inputs.get(j), "end")) {
                                     i = j;
@@ -110,10 +130,11 @@ public class Level3 extends Level {
                 }
 
             } catch (Exception e) {
-                if (i <= inputs.size() - 1)
-                    functionOutputs.add("");
+
                 functionOutputs.set(curFunction, "ERROR");
                 curFunction++;
+                if (i <= inputs.size() - 1)
+                    functionOutputs.add("");
                 variables.clear();
                 i += nextStart(inputs.subList(i, inputs.size() - 1));
 
