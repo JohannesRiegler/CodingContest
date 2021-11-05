@@ -6,8 +6,8 @@ import java.util.Locale;
 import java.util.Scanner;
 
 public class Level {
-    public static final String BASE_INPUT_PATH = System.getProperty("user.dir") + "/src/Classic/in/";
-    public static final String BASE_OUTPUT_PATH = System.getProperty("user.dir") + "/src/Classic/out/";
+    public static final String BASE_INPUT_PATH = System.getProperty("user.dir") + "/src/School/in/";
+    public static final String BASE_OUTPUT_PATH = System.getProperty("user.dir") + "/src/School/out/";
 
     public static Scanner getScanner(File fileToScan) {
         Scanner scanner;
