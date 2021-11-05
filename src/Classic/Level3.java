@@ -53,15 +53,17 @@ public class Level3 extends Level {
         ArrayList<Boolean> ifValues = new ArrayList<>();
         ArrayList<ArrayList<String>> functions = new ArrayList<>();
         for (int i = 0; i < inputs1.size(); i++) {
-            if (Objects.equals(inputs1.get(i), "start")) {
+            String input = inputs1.get(i);
+            if (Objects.equals(input, "start")) {
                 functions.add(new ArrayList<>());
                 continue;
             }
-            if (Objects.equals(inputs1.get(i), "end") && i < inputs1.size() - 1 && Objects.equals(inputs1.get(i + 1), "start")) {
+            if (Objects.equals(input, "end") && i < inputs1.size() - 1 && Objects.equals(inputs1.get(i + 1), "start")) {
                 functions.add(new ArrayList<>());
+                i++;
                 continue;
             }
-            functions.get(functions.size() - 1).add(inputs1.get(i));
+            functions.get(functions.size() - 1).add(input);
         }
         for (int curFunction = 0; curFunction < functions.size(); curFunction++) {
             ArrayList<String> inputs = functions.get(curFunction);
@@ -156,19 +158,14 @@ public class Level3 extends Level {
                     break;
                 }
             }
-            for (String functionOutput : functionOutputs) {
-                fw.append(functionOutput + "\n");
-            }
+
         }
-
+        for (String functionOutput : functionOutputs) {
+            fw.append(functionOutput + "\n");
+        }
     }
 
-    private static int nextStart(List<String> subList) {
-        if (subList.size() == 0)
-            return 0;
-        int index = subList.indexOf("start");
-        return index != -1 ? index : subList.size() - 1;
-    }
+
 
 
 }
