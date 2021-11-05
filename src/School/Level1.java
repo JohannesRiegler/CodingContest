@@ -1,4 +1,6 @@
 package School;
 
-public class Level1 {
+import common.Level;
+
+public class Level1 extends Level {
 }
