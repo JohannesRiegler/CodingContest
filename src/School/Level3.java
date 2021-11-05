@@ -58,38 +58,43 @@ public class Level3 extends Level {
         }
 
         for (Map.Entry<Integer, ArrayList<Integer>> e : econSweetValues.entrySet()) {
-            System.out.println(""+e.getKey() + ": " + e.getValue().toString());
+            System.out.println("" + e.getKey() + ": " + e.getValue().toString());
         }
 
         ArrayList<int[]> outputs = new ArrayList<>();
-        for (Map.Entry<Integer, ArrayList<Integer>> i : econBaskets.entrySet()) {
-            ArrayList<Trade> trades = new ArrayList<>();
-            for (Map.Entry<Integer, ArrayList<Integer>> j : econBaskets.entrySet()) {
-                if (Objects.equals(i.getKey(), j.getKey()))
-                    continue;
+        boolean tradesPossible = true;
+        while(tradesPossible){
+            tradesPossible = false;
+            for (Map.Entry<Integer, ArrayList<Integer>> i : econBaskets.entrySet()) {
+                ArrayList<Trade> trades = new ArrayList<>();
+                for (Map.Entry<Integer, ArrayList<Integer>> j : econBaskets.entrySet()) {
+                    if (Objects.equals(i.getKey(), j.getKey()))
+                        continue;
 
-                for (Integer sweetI : i.getValue()) {
-                    for(Integer sweetJ : j.getValue()) {
-                        if (econSweetValues.get(i.getKey()).get(sweetI-1) < econSweetValues.get(i.getKey()).get(sweetJ-1))
-                            if (econSweetValues.get(j.getKey()).get(sweetI-1) > econSweetValues.get(j.getKey()).get(sweetJ-1)){
-                                trades.add(new Trade(j.getKey(), sweetI, sweetJ, econSweetValues.get(i.getKey()).get(sweetJ-1) - econSweetValues.get(i.getKey()).get(sweetI-1)));
-                            }
+                    for (Integer sweetI : i.getValue()) {
+                        for (Integer sweetJ : j.getValue()) {
+                            if (econSweetValues.get(i.getKey()).get(sweetI - 1) < econSweetValues.get(i.getKey()).get(sweetJ - 1))
+                                if (econSweetValues.get(j.getKey()).get(sweetI - 1) > econSweetValues.get(j.getKey()).get(sweetJ - 1)) {
+                                    trades.add(new Trade(j.getKey(), sweetI, sweetJ, econSweetValues.get(i.getKey()).get(sweetJ - 1) - econSweetValues.get(i.getKey()).get(sweetI - 1)));
+                                }
+                        }
                     }
                 }
-            }
 
-            if (trades.isEmpty()) {
-                outputs.add(new int[]{});
-                continue;
-            }
-            Collections.sort(trades, new Comparator<Trade>() {
-                @Override
-                public int compare(Trade o1, Trade o2) {
-                    return Integer.compare(o2.gain, o1.gain);
+                if (trades.isEmpty()) {
+                    outputs.add(new int[]{});
+                    continue;
                 }
-            });
+                Collections.sort(trades, new Comparator<Trade>() {
+                    @Override
+                    public int compare(Trade o1, Trade o2) {
+                        return Integer.compare(o2.gain, o1.gain);
+                    }
+                });
 
-            outputs.add(new int[]{i.getKey(), trades.get(0).mySweetType, trades.get(0).targetId, trades.get(0).targetSweetType});
+
+                outputs.add(new int[]{i.getKey(), trades.get(0).mySweetType, trades.get(0).targetId, trades.get(0).targetSweetType});
+            }
         }
 
 
@@ -108,6 +113,8 @@ public class Level3 extends Level {
             }
             fw.append("\n");
         }
+
+
     }
 
 }
