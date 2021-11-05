@@ -5,9 +5,7 @@ import common.Level;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Scanner;
+import java.util.*;
 
 public class Level1 extends Level {
     public static void main(String[] args) throws IOException {
@@ -27,27 +25,21 @@ public class Level1 extends Level {
     }
 
     private static void calculateValues(Scanner scanner, FileWriter fw) throws IOException {
-        int amount = scanner.nextInt();
+        int loc = scanner.nextInt();
         scanner.nextLine();
-        ArrayList<Integer[]> inputs = new ArrayList<>();
-        HashMap<Integer, Integer> map = new HashMap<>();
+        ArrayList<String> inputs = new ArrayList<>();
 
         while (scanner.hasNext()) {
             String line = scanner.nextLine();
-            String[] strings = line.split(" ");
-            int sum = 0;
-            int id = Integer.parseInt(strings[0]);
-            for (int i = 1; i < strings.length; i++) {
-                System.out.println(strings[i]);
-                if (!strings[i].isEmpty())
-                    sum += Integer.parseInt(strings[i]);
+            inputs.addAll(List.of(line.split(" ")));
+        }
+
+        for (int i = 0; i < inputs.size(); i++) {
+            if(Objects.equals(inputs.get(i), "print")){
+                fw.append(inputs.get(i + 1));
             }
-            map.put(id, sum);
-
         }
 
-        for (Integer value : map.values()) {
-            fw.append("" + value + "\n");
-        }
+
     }
 }
