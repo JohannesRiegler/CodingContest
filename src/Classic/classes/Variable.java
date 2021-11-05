@@ -7,8 +7,8 @@ public class Variable {
     public String name;
 
     public Variable( String name, String value) {
-        this.value = value;
         this.name = name;
+        this.value = value;
     }
     public Variable( String name) {
         this.value = "";
@@ -45,5 +45,13 @@ public class Variable {
     @Override
     public int hashCode() {
         return Objects.hash(name);
+    }
+
+    @Override
+    public String toString() {
+        return "Variable{" +
+                "value='" + value + '\'' +
+                ", name='" + name + '\'' +
+                '}';
     }
 }
