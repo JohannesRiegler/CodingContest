@@ -70,6 +70,7 @@ public class Level3 extends Level {
             boolean breakFunction = false;
             variables.clear();
             functionOutputs.add("");
+            ifValues.clear();
             for (int i = 0; i < inputs.size(); i++) {
                 String input = inputs.get(i);
                 try {
@@ -107,6 +108,7 @@ public class Level3 extends Level {
                             functionOutputs.set(curFunction, functionOutputs.get(curFunction).concat(nextValue));
                         }
                         case "if" -> {
+                            System.out.println(curFunction+"if");
                             String nextValue = inputs.get(++i);
                             String ifValue = nextValue;
                             if (variables.contains(new Variable(nextValue))) {
@@ -125,13 +127,16 @@ public class Level3 extends Level {
                                         break;
                                     }
                                 }
-                            } else {
+                            } else if (ifValue.equals("true") ){
                                 ifValues.add(true);
+                            }else{
+                                throw new errorException();
                             }
                         }
                         case "else" -> {
+                            System.out.println(curFunction+"else");
                             if (ifValues.size() == 0) {
-                                System.out.println(i + ": " + inputs.subList(i - 5, i));
+                                System.out.println(i + ": " + inputs.subList(i - 6, i+1));
                             }
                             if (ifValues.get(ifValues.size() - 1)) {
                                 for (int j = i + 1; j < inputs.size(); j++) {
@@ -147,13 +152,15 @@ public class Level3 extends Level {
                         }
                         case "return" -> breakFunction = true;
                         default -> {
-                            System.out.println("NOT: " + input);
+//                            System.out.println("NOT: " + input);
                         }
                     }
                     if (breakFunction) {
                         break;
                     }
                 } catch (Exception e) {
+                    if(!(Objects.equals(e.getClass().getCanonicalName(), "Classic.Level3.errorException")))
+                        e.printStackTrace();
                     functionOutputs.set(curFunction, "ERROR");
                     break;
                 }
@@ -164,8 +171,6 @@ public class Level3 extends Level {
             fw.append(functionOutput + "\n");
         }
     }
-
-
 
 
 }
