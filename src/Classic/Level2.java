@@ -54,15 +54,11 @@ public class Level2 extends Level {
                         for (int j = ++i; j < inputs.size(); j++) {
                             if (inputs.get(j) == "end") {
                                 i = j;
-                                if (inputs.get(j+1) == "else")
-                                    i++;
                                 break;
                             }
-
                         }
                     } else {
                         lastIf = true;
-                        i++;
                     }
                     break;
                 case "else":
@@ -73,13 +69,12 @@ public class Level2 extends Level {
                                 break;
                             }
                         }
-                        break;
                     }
                     break;
                 case "return":
                     return;
                 default:
-                    System.out.println(input);
+                    System.out.println("NOT: "+ input);
             }
         }
 
