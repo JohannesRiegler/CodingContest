@@ -43,7 +43,7 @@ public class Level3 extends Level {
             inputs.addAll(List.of(line.split(" ")));
         }
 
-        boolean lastIf = false;
+        ArrayList<Boolean> ifValues = new ArrayList<>();
         int curFunction = 0;
         for (int i = 0; i < inputs.size(); i++) {
             String input = inputs.get(i);
@@ -51,12 +51,14 @@ public class Level3 extends Level {
                 switch (input) {
                     case "start":
                         curFunction++;
+                        functionOutputs.add("");
+                        variables.clear();
                         break;
                     case "var": {
                         String name = inputs.get(++i);
                         String value = inputs.get(++i);
 
-                        if (variables.contains(new Variable(name))){
+                        if (variables.contains(new Variable(name))) {
                             throw new Exception();
                         }
                         variables.add(new Variable(value, name));
@@ -66,21 +68,18 @@ public class Level3 extends Level {
                     case "set": {
                         String name = inputs.get(++i);
                         String value = inputs.get(++i);
-                        if (!variables.contains(new Variable(name))){
+                        if (!variables.contains(new Variable(name))) {
                             throw new Exception();
-                        }
-                        else {
+                        } else {
                             variables.get(variables.indexOf(new Variable(name))).setValue(value);
                         }
                     }
                     case "print":
-                        if (functionOutputs.size() - 1 < curFunction)
-                            functionOutputs.add("");
                         functionOutputs.get(curFunction).concat(inputs.get(++i));
                         break;
                     case "if":
                         if (Objects.equals(inputs.get(++i), "false")) {
-                            lastIf = false;
+                            ifValues.add(false);
                             for (int j = ++i; j < inputs.size(); j++) {
                                 if (Objects.equals(inputs.get(j), "end")) {
                                     i = j;
@@ -88,18 +87,21 @@ public class Level3 extends Level {
                                 }
                             }
                         } else {
-                            lastIf = true;
+                            ifValues.add(true);
                         }
                         break;
                     case "else":
-                        if (lastIf) {
+                        if (!ifValues.get(ifValues.size()-1)) {
                             for (int j = i + 1; j < inputs.size(); j++) {
                                 if (Objects.equals(inputs.get(j), "end")) {
                                     i = j;
                                     break;
                                 }
                             }
+
                         }
+                        int index = ifValues.size() - 1;
+                        ifValues.remove(index);
                         break;
                     case "return":
                         return;
@@ -108,9 +110,13 @@ public class Level3 extends Level {
                 }
 
             } catch (Exception e) {
+                if (i <= inputs.size() - 1)
+                    functionOutputs.add("");
                 functionOutputs.set(curFunction, "ERROR");
                 curFunction++;
+                variables.clear();
                 i += nextStart(inputs.subList(i, inputs.size() - 1));
+
             }
         }
 
