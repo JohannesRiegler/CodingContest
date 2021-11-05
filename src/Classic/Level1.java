@@ -31,6 +31,7 @@ public class Level1 extends Level {
         scanner.nextLine();
         ArrayList<Integer[]> inputs = new ArrayList<>();
         HashMap<Integer, Integer> map = new HashMap<>();
+
         while (scanner.hasNext()) {
             String line = scanner.nextLine();
             String[] strings = line.split(" ");
