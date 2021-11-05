@@ -63,39 +63,33 @@ public class Level3 extends Level {
 
         ArrayList<int[]> outputs = new ArrayList<>();
         for (Map.Entry<Integer, ArrayList<Integer>> i : econBaskets.entrySet()) {
-            int highId = Integer.MAX_VALUE;
-            int highVal = 0;
-            int myLowVal = 0;
-            int myLowType = Integer.MAX_VALUE;
-            HashMap<Integer, Trade> myBestTrades = new HashMap<>();
-            for (Integer integer : i.getValue()) {
-                int sub = econSweetValues.get(i.getKey()).get(integer);
-
-                if (myLowVal > sub) {
-                    myLowVal = sub;
-                    myLowType = integer;
-                }
-            }
-
+            ArrayList<Trade> trades = new ArrayList<>();
             for (Map.Entry<Integer, ArrayList<Integer>> j : econBaskets.entrySet()) {
                 if (Objects.equals(i.getKey(), j.getKey()))
                     continue;
 
-                for (Integer integer : j.getValue()) {
-                    int sub = econSweetValues.get(j.getKey()).get(integer);
-
-                    if (highVal < sub) {
-                        highVal = sub;
-                        highId = integer;
+                for (Integer sweetI : i.getValue()) {
+                    for(Integer sweetJ : j.getValue()) {
+                        if (econSweetValues.get(i.getKey()).get(sweetI-1) < econSweetValues.get(i.getKey()).get(sweetJ-1))
+                            if (econSweetValues.get(j.getKey()).get(sweetI-1) > econSweetValues.get(j.getKey()).get(sweetJ-1)){
+                                trades.add(new Trade(j.getKey(), sweetI, sweetJ, econSweetValues.get(i.getKey()).get(sweetJ-1) - econSweetValues.get(i.getKey()).get(sweetI-1)));
+                            }
                     }
                 }
             }
 
-            int myLowest = i.getValue().get(0);
-            if (myLowest < highVal)
-                outputs.add(new int[]{i.getKey(), myLowest, highId, highVal});
-            else
+            if (trades.isEmpty()) {
                 outputs.add(new int[]{});
+                continue;
+            }
+            Collections.sort(trades, new Comparator<Trade>() {
+                @Override
+                public int compare(Trade o1, Trade o2) {
+                    return Integer.compare(o2.gain, o1.gain);
+                }
+            });
+
+            outputs.add(new int[]{i.getKey(), trades.get(0).mySweetType, trades.get(0).targetId, trades.get(0).targetSweetType});
         }
 
 
@@ -115,4 +109,5 @@ public class Level3 extends Level {
             fw.append("\n");
         }
     }
+
 }
