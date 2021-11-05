@@ -9,7 +9,10 @@ import java.util.*;
 
 public class Level2 extends Level {
     enum Statement {
-        PRINT, ELSE, RETURN, IF
+        IF("if"), ELSE("else"), PRINT("print"), RETURN("return"), START("start"), END("end");
+
+        Statement(String s) {
+        }
     }
 
     public static void main(String[] args) throws IOException {
@@ -43,32 +46,39 @@ public class Level2 extends Level {
             String input = inputs.get(i);
             switch (input) {
                 case "print":
-                    fw.append(inputs.get(i + 1));
+                    fw.append(inputs.get(++i));
+                    break;
                 case "if":
-                    if (inputs.get(i + 1) == "false") {
-                        for (int j = i + 2; j < inputs.size(); j++) {
+                    if (inputs.get(++i) == "false") {
+                        for (int j = ++i; j < inputs.size(); j++) {
                             if (inputs.get(j) == "end") {
-                                i = ++j;
-                                if (inputs.get(j) == "else")
+                                i = j;
+                                if (inputs.get(j+1) == "else")
                                     i++;
                                 break;
                             }
 
                         }
                     } else {
+                        lastIf = true;
                         i++;
                     }
                     break;
                 case "else":
-                    for (int j = i + 1; j < inputs.size(); j++) {
-                        if (Objects.equals(inputs.get(j), "end")) {
-                            i = j;
-                            break;
+                    if (lastIf) {
+                        for (int j = i + 1; j < inputs.size(); j++) {
+                            if (Objects.equals(inputs.get(j), "end")) {
+                                i = j;
+                                break;
+                            }
                         }
+                        break;
                     }
-                    break;
                 case "return":
                     return;
+                default:
+                    new Exception("Fuck");
+                    break;
             }
         }
 
