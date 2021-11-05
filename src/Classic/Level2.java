@@ -49,10 +49,10 @@ public class Level2 extends Level {
                     fw.append(inputs.get(++i));
                     break;
                 case "if":
-                    if (inputs.get(++i) == "false") {
+                    if (Objects.equals(inputs.get(++i), "false")) {
                         lastIf = false;
                         for (int j = ++i; j < inputs.size(); j++) {
-                            if (inputs.get(j) == "end") {
+                            if (Objects.equals(inputs.get(j), "end")) {
                                 i = j;
                                 break;
                             }
